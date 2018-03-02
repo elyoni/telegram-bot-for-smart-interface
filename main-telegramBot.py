@@ -6,6 +6,9 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.inlinekeyboardbutton import InlineKeyboardButton
 import telegram
 
+
+permission_file_path = "permission.json"
+
 Telegram_PORT   =   8443
 Telegram_TOKEN  =   'EnterYourTOEKN HERE'
 #MQTT_Server_IP	=		'192.168.1.12' # Uncomment if the borker is not on the local computer
@@ -38,10 +41,8 @@ class TelegramServer:
 
     def readPermissionFile(self):
         # Read the file permission.ini and read the users number and permission
-        openFiles = open('permission.ini','r').readlines()
-        self.permissionsList = [i.replace('\n','').split(' ',2) for i in openFiles] #To Remove the \n in the test
-        self.admin_user_data = filter(lambda x: 'admin' in x, self.permissionsList)[0]
-        print "The admin user is " + ' '.join(self.admin_user_data)
+        with open(permission_file_path, 'r') as file:
+            self.permission_data = json.load(file)
 
     def telegram_server_configure(self):
         # General Configure
