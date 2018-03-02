@@ -99,13 +99,13 @@ class TelegramServer:
         msgList = msg.split(';')
         msgToSend = ('New Download:  ' + msgList[1] + ', Path: ' + msgList[2] + ', Label: ' + msgList[0])
         for user in msgList[0].split('@'):
-            print user
+            print(user)
             try:
                 userID = filter(lambda x: user in x, self.permissionsList)[0][2]
                 self.bot.sendMessage(chat_id=userID,text=msgToSend,reply_markup=telegram.ReplyKeyboardRemove())
             except:
                 unknownUser =  "The User " + user + " Is unknown, Sending message to admin"
-                print unknownUser
+                print(unknownUser)
                 msgToSendTemp =  unknownUser + "\n" + msgToSend
                 self.bot.sendMessage(chat_id=self.admin_user_data[2],text=msgToSendTemp,reply_markup=telegram.ReplyKeyboardRemove())
                 
