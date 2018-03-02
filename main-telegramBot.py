@@ -24,7 +24,7 @@ from mqttClass import mqttClass
 class user:
     def __init__(self):
         self.userName
-        self.userPermission
+        self.permission_data
         self.telegramID
 
 class TelegramServer:
@@ -68,15 +68,17 @@ class TelegramServer:
     def start(self,bot, update):
         update.message
         bot.sendMessage(chat_id=update.message.chat_id, text="I'm a bot, please talk to me!")
-        match_user = filter(lambda x: str(update.message.from_user.id) in x, self.permissionsList)
-        if match_user != []:
-            print("Everything Is ok i know the user")
-            update.message.reply_text('HI How Are You')
+        for i in range(len(self.permission_data["users"])):
+            if self.permission_data["users"][i] == update.message.from_user.id:
+                print("Everything Is ok i know the user")
+                update.message.reply_text('HI How Are You')
+                break
         else:
-						# Make sure to write the right ID for the admin user
-						print self.admin_user_data[2]
-						bot.send_message(chat_id = self.admin_user_data[2], text = "An unauthorized account send a /start command to the bot.\n The accound data is:\n" + str(update.message.from_user))
-						print("An unauthorized account send a /start command to the bot.\n The accound data is"    + str(update.message.from_user)) 
+            # Make sure to write the right ID for the admin user
+            print(self.admin_user_data[2])
+            bot.send_message(chat_id = self.admin_user_data[2], text = "An unauthorized account send a /start command to the bot.\n The accound data is:\n" + str(update.message.from_user))
+            print("An unauthorized account send a /start command to the bot.\n The accound data is"    + str(update.message.from_user)) 
+
     def whatMyID(self,bot,update):
         update.message.reply_text("Your ID is: " + str(update.message.chat_id))
 
