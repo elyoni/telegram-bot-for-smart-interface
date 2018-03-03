@@ -19,9 +19,6 @@ from lxml import html
 # MQTT
 from mqttClass import mqttClass
 
-# 
-
-
 class user:
     def __init__(self):
         self.userName
