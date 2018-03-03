@@ -7,11 +7,14 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 #from telegram.inlinekeyboardbutton import InlineKeyboardButton
 import telegram
 
-
+config_file_path = "config.json"
 permission_file_path = "permission.json"
 
-Telegram_PORT   =   8443
-Telegram_TOKEN  =   'EnterYourTOEKN HERE'
+
+with open(config_file_path, 'r') as file:
+    config = json.load(file)
+Telegram_PORT   = config["telegram_port"]
+Telegram_TOKEN  = config["telegram_token"] 
 #MQTT_Server_IP	=		'192.168.1.12' # Uncomment if the borker is not on the local computer
 
 from lxml import html

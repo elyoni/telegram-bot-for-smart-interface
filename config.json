@@ -1,0 +1,5 @@
+{
+    "telegram_token": "asdsadad",
+    "telegram_port": "8443",
+    "mqtt_server": "127.0.0.1"
+}
