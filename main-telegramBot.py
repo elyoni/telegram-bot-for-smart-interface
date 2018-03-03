@@ -13,9 +13,9 @@ permission_file_path = "permission.json"
 
 with open(config_file_path, 'r') as file:
     config = json.load(file)
-Telegram_PORT   = config["telegram_port"]
-Telegram_TOKEN  = config["telegram_token"] 
-#MQTT_Server_IP	=		'192.168.1.12' # Uncomment if the borker is not on the local computer
+Telegram_PORT  = config["telegram_port"]
+Telegram_TOKEN = config["telegram_token"]
+MQTT_Server_IP = config["mqtt_server"]
 
 from lxml import html
 
@@ -36,9 +36,9 @@ class TelegramServer:
     def __init__(self):
         self.readPermissionFile()
         self.telegram_server_configure() #Connect To Telegram Server
-        self.mqttConnection = mqttClass(MQTT_Server_IP)
-        self.mqttConnection.mqttSubscribeHandler = self.mqttSubscribeHandler
-        self.mqttConnection.startLoopMQTT()
+        #self.mqttConnection = mqttClass(MQTT_Server_IP)
+        #self.mqttConnection.mqttSubscribeHandler = self.mqttSubscribeHandler
+        #self.mqttConnection.startLoopMQTT()
 
     def readPermissionFile(self):
         # Read the file permission.ini and read the users number and permission
