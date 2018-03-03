@@ -62,9 +62,9 @@ class TelegramServer:
         self.dispatcher.add_handler(MessageHandler(Filters.text, self.echo))
 
         # Handel button querys
-        self.dispatcher.add_handler(CallbackQueryHandler(self.button))        
+        self.dispatcher.add_handler(CallbackQueryHandler(self.button))
 
-        updater.start_polling() # Need to change webhook    
+        updater.start_polling() # Need to change webhook
     # ------ The Commands function ---------
     def start(self,bot, update):
         update.message
@@ -78,7 +78,7 @@ class TelegramServer:
             # Make sure to write the right ID for the admin user
             print(self.admin_user_data[2])
             bot.send_message(chat_id = self.admin_user_data[2], text = "An unauthorized account send a /start command to the bot.\n The accound data is:\n" + str(update.message.from_user))
-            print("An unauthorized account send a /start command to the bot.\n The accound data is"    + str(update.message.from_user)) 
+            print("An unauthorized account send a /start command to the bot.\n The accound data is"    + str(update.message.from_user))
 
     def whatMyID(self,bot,update):
         update.message.reply_text("Your ID is: " + str(update.message.chat_id))
@@ -109,7 +109,6 @@ class TelegramServer:
                 print(unknownUser)
                 msgToSendTemp =  unknownUser + "\n" + msgToSend
                 self.bot.sendMessage(chat_id=self.admin_user_data[2],text=msgToSendTemp,reply_markup=telegram.ReplyKeyboardRemove())
-                
     def sendRawToTelegram(self,msg):
         # This function is more for debug, when publish a message it will be send to the admin
         self.bot.send_message(chat_id=self.admin_user_data[2], text=msg)
