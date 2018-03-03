@@ -9,6 +9,7 @@ import telegram
 from lxml import html
 # MQTT
 from mqttClass import mqttClass
+from modules.shell_cmd import shell_cmd_run
 
 config_file_path = "config.json"
 permission_file_path = "permission.json"
@@ -57,6 +58,7 @@ class TelegramServer:
         # Headel the '/' commandes to function
         self.dispatcher.add_handler(CommandHandler('start', self.start))
         self.dispatcher.add_handler(CommandHandler('whatmyid', self.whatMyID))
+        self.dispatcher.add_handler(CommandHandler('shellcmd', shell_cmd_run))
 
         # Handel regular message
         self.dispatcher.add_handler(MessageHandler(Filters.text, self.echo))
