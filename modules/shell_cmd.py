@@ -1,10 +1,13 @@
 import subprocess
 
 
-def shell_cmd_run(bot, update):
-    cmd = parse_command(update.message.text)
-    result = run_cmd(cmd)
-    bot.sendMessage(chat_id=update.message.chat_id, text=result)
+def shell_cmd(bot, update, permission_data):
+    if permission_data["admin"] == update.message.chat_id:
+        cmd = parse_command(update.message.text)
+        result = run_cmd(cmd)
+        bot.sendMessage(chat_id=update.message.chat_id, text=result)
+    else:
+        print("Unauthorized account")
 
 
 def parse_command(message):
@@ -13,7 +16,7 @@ def parse_command(message):
 
 
 def run_cmd(cmd):
-    result = subprocess.run(cmd, stdout=subprocess.PIPE)
+    result = subprocess.Popen(cmd, stdout=subprocess.PIPE)
     if result.stdout:
         return result.stdout.decode('utf-8')
     else:
