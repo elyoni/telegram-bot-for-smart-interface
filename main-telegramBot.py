@@ -7,7 +7,6 @@ from telegram.ext import MessageHandler, Filters
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 # from telegram.inlinekeyboardbutton import InlineKeyboardButton
 import telegram
-from lxml import html
 # MQTT
 from mqttClass import mqttClass
 from modules.shell_cmd import shell_cmd
@@ -20,14 +19,6 @@ with open(config_file_path, 'r') as file:
 Telegram_PORT = config["telegram_port"]
 Telegram_TOKEN = config["telegram_token"]
 MQTT_Server_IP = config["mqtt_server"]
-
-
-class User:
-    def __init__(self):
-        self.userName
-        self.permission_data
-        self.telegramID
-
 
 class TelegramServer:
     def mqttSubscribeHandler(self):
@@ -45,6 +36,7 @@ class TelegramServer:
         # Read the file permission.ini and read the users number and permission
         with open(permission_file_path, 'r') as file:
             self.permission_data = json.load(file)
+
 
     def telegram_server_configure(self):
         # General Configure
