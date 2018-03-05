@@ -10,8 +10,7 @@ import telegram
 from lxml import html
 # MQTT
 from mqttClass import mqttClass
-from modules.shell_cmd import shell_cmd_run
-
+from modules.shell_cmd import shell_cmd
 
 config_file_path = os.path.abspath(__file__).rsplit(os.sep, 1)[0] + os.sep + "config.json"
 permission_file_path = os.path.abspath(__file__).rsplit(os.sep, 1)[0] + os.sep + "permission.json"
@@ -59,7 +58,7 @@ class TelegramServer:
         # Headel the '/' commandes to function
         self.dispatcher.add_handler(CommandHandler('start', self.start))
         self.dispatcher.add_handler(CommandHandler('whatmyid', self.whatMyID))
-        self.dispatcher.add_handler(CommandHandler('shellcmd', shell_cmd_run))
+        self.dispatcher.add_handler(CommandHandler('shellcmd', self.shell_cmd_run))
 
         # Handel regular message
         self.dispatcher.add_handler(MessageHandler(Filters.text, self.echo))
@@ -89,6 +88,9 @@ class TelegramServer:
 
     def whatMyID(self, bot, update):
         update.message.reply_text("Your ID is: " + str(update.message.chat_id))
+
+    def shell_cmd_run(self, bot, update):
+        shell_cmd(bot, update, self.permission_data)
 
     def button(self, bot, update):
         query = update.callback_query
