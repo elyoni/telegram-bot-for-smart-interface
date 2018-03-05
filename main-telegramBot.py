@@ -1,4 +1,5 @@
 import json
+import os
 # For the Telegram lib
 from telegram.ext import Updater
 from telegram.ext import CommandHandler, CallbackQueryHandler
@@ -11,9 +12,9 @@ from lxml import html
 from mqttClass import mqttClass
 from modules.shell_cmd import shell_cmd_run
 
-config_file_path = "config.json"
-permission_file_path = "permission.json"
 
+config_file_path = os.path.abspath(__file__).rsplit(os.sep, 1)[0] + os.sep + "config.json"
+permission_file_path = os.path.abspath(__file__).rsplit(os.sep, 1)[0] + os.sep + "permission.json"
 
 with open(config_file_path, 'r') as file:
     config = json.load(file)
