@@ -1,7 +1,7 @@
 import json
 import os
 # For the Telegram lib
-from telegram.ext import Updater
+from telegram.ext import Updater, ConversationHandler
 from telegram.ext import CommandHandler, CallbackQueryHandler
 from telegram.ext import MessageHandler, Filters
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
@@ -9,7 +9,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import telegram
 # MQTT
 from mqttClass import mqttClass
-from modules.shell_cmd import shell_cmd
+from modules.shell_cmd import ShellCmd
 
 config_file_path = os.path.abspath(__file__).rsplit(os.sep, 1)[0] + os.sep + "config.json"
 permission_file_path = os.path.abspath(__file__).rsplit(os.sep, 1)[0] + os.sep + "permission.json"
@@ -22,16 +22,17 @@ Telegram_TOKEN = config["telegram_token"]
 MQTT_Server_IP = config["mqtt_server"]
 
 class TelegramServer:
-    def mqttSubscribeHandler(self):
-        self.mqttConnection.subscribe("downloadFiles", self.downloadFiles)
-        self.mqttConnection.subscribe("sendRawToTelegram", self.sendRawToTelegram)
-
     def __init__(self):
+        self.shell_cmd = ShellCmd()
         self.readPermissionFile()
         self.telegram_server_configure()  # Connect To Telegram Server
         # self.mqttConnection = mqttClass(MQTT_Server_IP)
         # self.mqttConnection.mqttSubscribeHandler = self.mqttSubscribeHandler
         # self.mqttConnection.startLoopMQTT()
+    def mqttSubscribeHandler(self):
+        self.mqttConnection.subscribe("downloadFiles", self.downloadFiles)
+        self.mqttConnection.subscribe("sendRawToTelegram", self.sendRawToTelegram)
+
 
     def readPermissionFile(self):
         # Read the file permission.ini and read the users number and permission
@@ -51,18 +52,19 @@ class TelegramServer:
         # Headel the '/' commandes to function
         self.dispatcher.add_handler(CommandHandler('start', self.start))
         self.dispatcher.add_handler(CommandHandler('whatmyid', self.whatMyID))
-        self.dispatcher.add_handler(CommandHandler('shellcmd', self.shell_cmd_run))
+        self.dispatcher.add_handler(self.shell_cmd.build_conversation_handler())
 
         # Handel regular message
         self.dispatcher.add_handler(MessageHandler(Filters.text, self.echo))
 
         # Handel button querys
-        self.dispatcher.add_handler(CallbackQueryHandler(self.button))
+        #self.dispatcher.add_handler(CallbackQueryHandler(self.button))
 
         updater.start_polling()  # Need to change webhook
 
     # ------ The Commands function ---------
     def start(self, bot, update):
+        print("start")
         bot.sendMessage(chat_id=update.message.chat_id, text="I'm a bot, please talk to me!")
         for i in range(len(self.permission_data["users"])):
             if self.permission_data["users"][i] == update.message.from_user.id:
@@ -84,13 +86,10 @@ class TelegramServer:
 
     def shell_cmd_run(self, bot, update):
         shell_cmd(bot, update, self.permission_data)
-
-    def button(self, bot, update):
-        query = update.callback_query
-        print(query.message.text)
-
+    
     def echo(self, bot, update):
         # This function is for debug, To see if the code is working
+        print("echo function:", update.message.text)
         bot.send_message(chat_id=update.message.chat_id, text=update.message.text)
 
     # ------ The mqtt function ---------
@@ -122,5 +121,6 @@ class TelegramServer:
         # This function is more for debug,
         # when publish a message it will be send to the admin
         self.bot.send_message(chat_id=self.admin_user_data[2], text=msg)
+
 
 telegramserver = TelegramServer()
