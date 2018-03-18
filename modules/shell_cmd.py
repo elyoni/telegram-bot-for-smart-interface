@@ -97,7 +97,7 @@ class ShellCmd:
                 return str(e)
         else:
             print("Unauthorized account")
-            return None
+            return "Unauthorized account"
 
 
     '''
