@@ -5,7 +5,6 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, ConversationHandler, CallbackQueryHandler
 
 permission_file_path = os.path.abspath(__file__).rsplit(os.sep, 2)[0] + os.sep + "permission.json"
-print(permission_file_path)
 settings_file_path = os.path.abspath(__file__).rsplit(os.sep, 1)[0] + os.sep + "settings.json"
 
 class ShellCmd:
@@ -13,7 +12,7 @@ class ShellCmd:
         self.readPermissionFile()
         self.readSettingsFile()
         self.SSH_MENU, self.CHOCICE= range(2)
-        self.keyboard = { "main_menu": [
+        self.keyboard = {"main_menu": [
                             [InlineKeyboardButton(u"ssh -R", callback_data='ssh -R'),
                             InlineKeyboardButton(u"Exit", callback_data='Exit')]
                             ],
@@ -42,8 +41,6 @@ class ShellCmd:
                 },
                 fallbacks=[CommandHandler('ssh', self.start)]
             )
-        
-
 
     def start(self, bot, update):
         reply_markup = InlineKeyboardMarkup(self.keyboard["main_menu"])
@@ -51,7 +48,7 @@ class ShellCmd:
             u"Start handler, Press next",
             reply_markup=reply_markup
         )
-        return self.CHOCICE 
+        return self.CHOCICE
 
     def choice(self, bot, update):
         return_value = self.CHOCICE
@@ -96,6 +93,8 @@ class ShellCmd:
         if self.permission_data["admin"] == chat_id:
             try:
                 result = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+                print("result.communicate()", cmd + result.communicate())
+
                 if result.stdout:
                     return result.decode('utf-8')
                 else:
