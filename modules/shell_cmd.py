@@ -6,10 +6,12 @@ from telegram.ext import CommandHandler, ConversationHandler, CallbackQueryHandl
 
 permission_file_path = os.path.abspath(__file__).rsplit(os.sep, 2)[0] + os.sep + "permission.json"
 print(permission_file_path)
+settings_file_path = os.path.abspath(__file__).rsplit(os.sep, 1)[0] + os.sep + "settings.json"
 
 class ShellCmd:
     def __init__(self):
         self.readPermissionFile()
+        self.readSettingsFile()
         self.SSH_MENU, self.CHOCICE= range(2)
         self.keyboard = { "main_menu": [
                             [InlineKeyboardButton(u"ssh -R", callback_data='ssh -R'),
@@ -25,6 +27,11 @@ class ShellCmd:
         # Read the file permission.ini and read the users number and permission
         with open(permission_file_path, 'r') as file:
             self.permission_data = json.load(file)
+
+    def readSettingsFile(self):
+        # Read the file permission.ini and read the users number and permission
+        with open(settings_file_path, 'r') as file:
+            self.settings_data = json.load(file)
 
     def build_conversation_handler(self):
         return ConversationHandler(
@@ -54,9 +61,8 @@ class ShellCmd:
         query = update.callback_query
         if query.data == "ssh -R":
             print("running ssh")
-            a = self.run_cmd(query.message.chat_id, "ssh -R 19998:localhost:22 yoni@yoni.dns")
-            print(a)
-            text = "Running \"ssh -R 19998:localhost:22 yoni@-----.dns\"" + "\n\n" + a
+            a = self.run_cmd(query.message.chat_id, self.settings_data["ssh -R"])
+            text = "Running \"" + self.settings_data["ssh -R"] + "\"" + "\n\n" + a
             keyboard = self.keyboard["ssh_menu"]
             return_value = self.SSH_MENU
         elif query.data == "Exit":
@@ -77,7 +83,8 @@ class ShellCmd:
         text = None
         if query.data == "kssh":
             print("run killall ssh")
-            text = "The ssh is close"
+            a = self.run_cmd(query.message.chat_id, self.settings_data["kssh"])
+            text = "The ssh is close\n" + a
         reply_markup = InlineKeyboardMarkup(keyboard)
         bot.edit_message_text(text=text,
                               chat_id=query.message.chat_id,

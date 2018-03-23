@@ -1,0 +1,4 @@
+{
+    "ssh -R": "ssh -R 19998:localhost:22 yoni@yoni.dns",
+    "kssh": "killall ssh"
+}
