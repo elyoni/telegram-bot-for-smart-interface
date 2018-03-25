@@ -92,7 +92,7 @@ class ShellCmd:
     def run_cmd(self, chat_id, cmd):
         if self.permission_data["admin"] == chat_id:
             try:
-                result = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+                result = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
                 print("result.communicate()", cmd + result.communicate())
 
                 if result.stdout:
